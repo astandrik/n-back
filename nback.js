@@ -4,7 +4,7 @@ let innerChildConstructor = function(i, j, blockSize) {
     </div>`;
 }
 
-let fieldBlockConstructor = function(i, j, blockSize, needInnerChild) {
+let fieldBlockConstructor = function(i, j, blockSize) {
     return `<div class='block'
      style='position:absolute;width:${blockSize - 4}px;background-color:white;display:flex;white;height:${blockSize - 4}px;top:${j*(blockSize)}px;left:${i*blockSize}px'>
       ${innerChildConstructor(i, j, blockSize)}
