@@ -11,7 +11,7 @@ let fieldBlockConstructor = function(i, j, blockSize) {
     </div>`;
 }
 
-const nSize = 6;
+const nSize = 4;
 const fieldSize = 400;
 const blockSize = (fieldSize/nSize);
 
@@ -24,15 +24,44 @@ for(let i = 0; i < nSize; i++) {
 }
 
 const chain = [];
+let chainSize = 1;
+const timeout = 2000;
+
+function chainTypeChange(e) {
+  const value = e.target.value;
+  chainSize = value;
+}
+
+function handleSuccess() {
+    let elementToCompare = chain[chain.length - chainSize - 2];
+    let currentElement= chain[chain.length - 1];
+    if (elementToCompare.i === currentElement.i && elementToCompare.j === currentElement.j) {
+      alert('success');
+    } else {
+      alert('failure');
+    }
+}
 
 function startChain() {
     setInterval(() => {
-        let randI = Math.floor((Math.random() * ( nSize - 1 )+ 1));
-        let randJ = Math.floor((Math.random() * ( nSize - 1 )+ 1));classList
-        const block = document.querySelector(`#block-${randI}-${randJ}`);
-        console.log(randI, randJ)
-        block.classList.remove('invisible');
-    },1000);
+        const prevBlock = chain[chain.length - 1];
+        let oldBlockDiv = null;
+        if (prevBlock) {
+          oldBlockDiv = document.querySelector(`#block-${prevBlock.i}-${prevBlock.j}`);
+          oldBlockDiv.classList.add('going-to-dissapear');
+        }
+        setTimeout(() => {
+          if(oldBlockDiv) {
+            oldBlockDiv.classList.remove('going-to-dissapear');
+            oldBlockDiv.classList.add('invisible');
+          }
+          let randI = Math.floor((Math.random() * ( nSize )));
+          let randJ = Math.floor((Math.random() * ( nSize )));
+          const block = document.querySelector(`#block-${randI}-${randJ}`);
+          block.classList.remove('invisible');
+          chain.push({i: randI, j: randJ });
+        }, 200);
+    }, timeout);
 }
 
 document.body.innerHTML = `<div class="container">
@@ -41,6 +70,8 @@ document.body.innerHTML = `<div class="container">
     </div>
     <div class="button-container">
       <div class="start-button" onclick="(${ startChain })()">Начать</div>
+      <div class="success-button" onclick="(${ handleSuccess })()">Совпадение</div>
+      <input type="text" onchange="(${ chainTypeChange })()">Длина цепи</div>
     </div>
 </div>`;
 
@@ -64,9 +95,21 @@ css.innerHTML = `.container {
 
 .button-container {
   display:flex;
-  justify-content:center;
+  justify-content:space-between;
   align-items:center;
   cursor:pointer;
+}
+
+.going-to-dissapear {
+  visibility: hidden;
+}
+
+.success-button {
+  width:100px;
+  height:50px;
+  text-align:center;
+  line-height: 50px;
+  background-color:green;
 }
 
 .start-button {
