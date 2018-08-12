@@ -11,7 +11,7 @@ let fieldBlockConstructor = function(i, j, blockSize) {
     </div>`;
 }
 
-const nSize = 4;
+const nSize = 3;
 const fieldSize = 400;
 const blockSize = (fieldSize/nSize);
 
@@ -25,11 +25,16 @@ for(let i = 0; i < nSize; i++) {
 
 const chain = [];
 let chainSize = 1;
-const timeout = 2000;
+let timeout = 2000;
 
 function chainTypeChange(e) {
   const value = e.target.value;
   chainSize = value;
+}
+
+function timeoutChange(e) {
+  const value = e.target.value;
+  timeout = value;
 }
 
 function handleSuccess() {
@@ -43,6 +48,8 @@ function handleSuccess() {
 }
 
 function startChain() {
+    document.getElementById('main-menu-screen').classList.add('no-display');
+    document.getElementById('game-screen').classList.remove('no-display');
     setInterval(() => {
         const prevBlock = chain[chain.length - 1];
         let oldBlockDiv = null;
@@ -65,13 +72,18 @@ function startChain() {
 }
 
 document.body.innerHTML = `<div class="container">
-    <div class="game-container">
-        ${blocks}
+    <div id="game-screen" class="no-display">
+      <div class="game-container">
+          ${blocks}
+      </div>
+      <div class="button-container">
+        <div class="success-button" onclick="(${ handleSuccess })()">Совпадение</div>
+      </div>
     </div>
-    <div class="button-container">
-      <div class="start-button" onclick="(${ startChain })()">Начать</div>
-      <div class="success-button" onclick="(${ handleSuccess })()">Совпадение</div>
-      <input type="text" onchange="(${ chainTypeChange })()">Длина цепи</div>
+    <div id='main-menu-screen'>
+          <input type="text" value="${chainSize + 1}" onchange="(${ chainTypeChange })(event)">Длина цепи</input>
+          <input type="text" value="${timeout}" onchange="(${ timeoutChange })(event)">Задержка(мс.)</input>
+          <div class="start-button" onclick="(${ startChain })()">Начать</div>
     </div>
 </div>`;
 
@@ -90,7 +102,9 @@ css.innerHTML = `.container {
   background-color:black;
   height:${fieldSize}px;
   width:${fieldSize}px;
-  display:relative
+  position: relative;
+  border-left: 4px solid black;
+  border-top: 4px solid black;
 }
 
 .button-container {
@@ -118,6 +132,26 @@ css.innerHTML = `.container {
   text-align:center;
   line-height: 50px;
   background-color:red
+}
+
+body {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.no-display {
+   display: none!important;
+}
+
+#main-menu-screen {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin-top: 10px;
 }
 `;
 document.body.appendChild(css);
