@@ -24,6 +24,8 @@ for(let i = 0; i < nSize; i++) {
 }
 
 const chain = [];
+
+let debugMode = false;
 let chainSize = 1;
 let timeout = 2000;
 
@@ -35,6 +37,27 @@ function chainTypeChange(e) {
 function timeoutChange(e) {
   const value = e.target.value;
   timeout = value;
+}
+
+function debugModeChange(e) {
+  const value = e.target.checked;
+  debugMode = value;
+  if (debugMode === true) {
+    document.querySelector('.debug-info').classList.remove('no-display');
+  } else {
+    document.querySelector('.debug-info').classList.add('no-display');
+  }
+}
+
+function updateChainDebugInfo() {
+  const chainArray = `<div>${chain.map((item, index) => `<div class='chain-row' id="debug-chain-${index}"><span>${item.i} </span><span> ${item.j}</span></div>`).reverse().join('')}</div>`;
+  const currentIndex = chain.length - 1;
+  document.querySelector('.chain-container').innerHTML = chainArray;
+  document.querySelector(`#debug-chain-${currentIndex}`).classList.add('bold');
+  const prev = document.querySelector(`#debug-chain-${currentIndex - chainSize - 1}`);
+  if (prev) {
+    prev.classList.add('bold');
+  }
 }
 
 function handleSuccess() {
@@ -67,6 +90,7 @@ function startChain() {
           const block = document.querySelector(`#block-${randI}-${randJ}`);
           block.classList.remove('invisible');
           chain.push({i: randI, j: randJ });
+          updateChainDebugInfo();
         }, 200);
     }, timeout);
 }
@@ -79,10 +103,16 @@ document.body.innerHTML = `<div class="container">
       <div class="button-container">
         <div class="success-button" onclick="(${ handleSuccess })()">Совпадение</div>
       </div>
+      <div class="debug-info no-display">
+          <div class='chain-container'>
+
+          </div>
+      </div>
     </div>
     <div id='main-menu-screen'>
-          <input type="text" value="${chainSize + 1}" onchange="(${ chainTypeChange })(event)">Длина цепи</input>
+          <input type="text" value="${chainSize}" onchange="(${ chainTypeChange })(event)">Длина цепи</input>
           <input type="text" value="${timeout}" onchange="(${ timeoutChange })(event)">Задержка(мс.)</input>
+          <input type="checkbox" onchange="(${ debugModeChange })(event)">Режим дебага</input>
           <div class="start-button" onclick="(${ startChain })()">Начать</div>
     </div>
 </div>`;
@@ -150,8 +180,24 @@ body {
   flex-direction: column;
 }
 
+.chain-container {
+  display: flex;
+  flex-direction: column;
+}
+
 input {
   margin-top: 10px;
+}
+
+.debug-info {
+  position: absolute;
+  top: 25px;
+  left: 25px;
+}
+
+.bold {
+  font-weight: bold;
+  font-size: 30px;
 }
 `;
 document.body.appendChild(css);
