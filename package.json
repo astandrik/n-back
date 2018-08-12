@@ -1,0 +1,25 @@
+{
+  "name": "n-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "start-frontend": "node ./start-frontend.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/astandrik/n-back.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/astandrik/n-back/issues"
+  },
+  "homepage": "https://github.com/astandrik/n-back#readme",
+  "dependencies": {
+    "express": "4.16.3",
+    "webpack": "4.16.5"
+  }
+}
